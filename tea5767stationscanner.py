@@ -205,12 +205,11 @@ class tea5767:
 
 
  def gapscan( self ):
-   i=False
    run=1
    self.freq = 87.4
-   fadd=0.1
+   fadd = 0.1
    f = open("run_"+str(run),"w")
-   while (i==False):
+   while ( 1 ):
      if(self.freq < 87.4 ):
        self.freq=87.4
      if(self.freq > 107.9 ):
@@ -231,8 +230,7 @@ class tea5767:
      level = results[0][3]>>4
      #print(results[0][0]&0x80 , " " , results[0][3]>>4)
 
-     #tune into station that has strong signal only
-     if(readyFlag ):
+     if( readyFlag ):
        print(self.freq , "MHz, Level: ",level)
        f.write( str(self.freq) + " " + str(level) + "\n" )
 
