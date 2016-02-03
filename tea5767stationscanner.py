@@ -201,6 +201,43 @@ class tea5767:
      #time.sleep(0.1)
    self.writeFrequency(self.freq ,0,direction)
 
+
+
+
+ def gapscan( self ):
+   i=False
+   run=1
+   self.freq = 87.4
+   fadd=0.1
+   f = open("run_"+str(run),"w")
+   while (i==False):
+     if(self.freq < 87.4 ):
+       self.freq=87.4
+     if(self.freq > 107.9 ):
+       self.freq=87.4
+       run = run + 1
+       f.close()
+       f = open("run_"+str(run),"w")	 
+     self.writeFrequency(self.freq+fadd,1,1)
+
+     #give time to finish writing, and then read status
+     time.sleep(0.1)
+     results = self.bus.transaction(
+       reading(self.add, 5)
+     )
+     self.freq = round((self.calculateFrequency()+self.getFreq())/2,2) #read again
+
+     readyFlag = 1 if (results[0][0]&0x80)==128 else 0
+     level = results[0][3]>>4
+     #print(results[0][0]&0x80 , " " , results[0][3]>>4)
+
+     #tune into station that has strong signal only
+     if(readyFlag ):
+       print(self.freq , "MHz, Level: ",level)
+       f.write( str(self.freq) + " " + str(level) + "\n" )
+
+
+
  def off(self):
    print("Radio off: Goodbye now!")
    self.writeFrequency(self.calculateFrequency(), 1,0) 
